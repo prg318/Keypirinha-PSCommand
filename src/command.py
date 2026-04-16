@@ -5,6 +5,7 @@ import keypirinha as kp
 import keypirinha_util as kpu
 
 class Command(kp.Plugin):
+    _debug = True
 
     SECTION_MAIN = 'main'
 
@@ -15,8 +16,17 @@ class Command(kp.Plugin):
     def __init__(self):
         super().__init__()
 
+    def on_config_changed(self):
+        self.dbg("on_config_changed called!")
+        self._read_config()
+
+    def _read_config(self):
+        settings = self.load_settings()
+        self._shell = settings.get("shell", "main", fallback="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe")
+        self.dbg("Shell is now: {}".format(self._shell))
+
     def on_start(self):
-        self._load_settings()
+        self._read_config()
 
         actions = []
 
@@ -48,25 +58,31 @@ class Command(kp.Plugin):
         if item.category() != self.ITEM_COMMAND:
             return
 
-        prompt = 'C:\\Windows\\System32\\cmd.exe'
+        prompt = self._shell
 
         [operator, command] = self._split_target(item.target())
 
         if operator == '>':
-            close = '/k'
+            #close = '/k'
+            close = '-NoExit'
         elif operator == '>>':
-            close = '/c'
+            #close = '/c'
+            close = ''
 
         if action and action.name() == "keep_open":
-            close = '/k'
+            #close = '/k'
+            close = '-NoExit'
         elif action and action.name() == "close_cmd":
-            close = '/c'
+            #close = '/c'
+            close = ''
 
         if os.path.isfile(prompt):
             try:
                 cmd = [prompt]
                 cmd.append(close)
+                cmd.append('-Command')
                 cmd.append(command)
+                self.dbg("Running {}".format(cmd))
                 subprocess.Popen(cmd, cwd = os.path.dirname(prompt))
             except Exception as e:
                 print('Exception: CMD - (%s)' % (e))
@@ -105,9 +121,6 @@ class Command(kp.Plugin):
             args_hint = kp.ItemArgsHint.FORBIDDEN,
             hit_hint = kp.ItemHitHint.IGNORE
         )
-
-    def _load_settings(self):
-        self.settings = self.load_settings()
 
     def _split_target(self, target):
         return target.split('@')

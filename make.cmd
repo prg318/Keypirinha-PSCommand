@@ -35,7 +35,7 @@ if "%1"=="build" (
     pushd "%~dp0"
     call "%KEYPIRINHA_SDK%\cmd\kparch" ^
         "%BUILD_DIR%\%PACKAGE_NAME%.keypirinha-package" ^
-        -r LICENSE* README* command*
+        -r LICENSE* README* src/command* command*
     popd
     goto end
 )
