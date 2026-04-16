@@ -4,7 +4,7 @@ import subprocess
 import keypirinha as kp
 import keypirinha_util as kpu
 
-class Command(kp.Plugin):
+class PSCommand(kp.Plugin):
     _debug = True
 
     SECTION_MAIN = 'main'

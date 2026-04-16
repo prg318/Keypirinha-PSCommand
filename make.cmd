@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set PACKAGE_NAME=Command
+set PACKAGE_NAME=PSCommand
 set INSTALL_DIR=%APPDATA%\Keypirinha\InstalledPackages
 
 if "%1"=="" goto help
@@ -35,7 +35,7 @@ if "%1"=="build" (
     pushd "%~dp0"
     call "%KEYPIRINHA_SDK%\cmd\kparch" ^
         "%BUILD_DIR%\%PACKAGE_NAME%.keypirinha-package" ^
-        -r LICENSE* README* src/command* command*
+        -r LICENSE* README* src/pscommand* pscommand*
     popd
     goto end
 )
@@ -54,7 +54,7 @@ if "%1"=="dev" (
     pushd "%~dp0"
     call "%KEYPIRINHA_SDK%\cmd\kparch" ^
         "%BUILD_DIR%\%PACKAGE_NAME%.keypirinha-package" ^
-        -r LICENSE* README* command* src\command*
+        -r LICENSE* README* pscommand* src\pscommand*
     popd
 
     copy /Y "%BUILD_DIR%\*.keypirinha-package" "%INSTALL_DIR%\"
