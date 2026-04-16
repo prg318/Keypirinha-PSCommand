@@ -30,8 +30,8 @@ class PSCommand(kp.Plugin):
 
         actions = []
 
-        actions.append(self._set_action('keep_open', 'Keep Open', 'Run the command and keep CMD open.'))
-        actions.append(self._set_action('close_cmd', 'Close CMD', 'Close CMD after running the command.'))
+        actions.append(self._set_action('keep_open', 'Keep Open', 'Run the command and keep shell open.'))
+        actions.append(self._set_action('close_cmd', 'Close shell', 'Close shell after running the command.'))
 
         self.set_actions(self.ITEM_COMMAND, actions)
 
@@ -62,24 +62,18 @@ class PSCommand(kp.Plugin):
 
         [operator, command] = self._split_target(item.target())
 
+        close = None
         if operator == '>':
-            #close = '/k'
             close = '-NoExit'
-        elif operator == '>>':
-            #close = '/c'
-            close = ''
 
         if action and action.name() == "keep_open":
-            #close = '/k'
             close = '-NoExit'
-        elif action and action.name() == "close_cmd":
-            #close = '/c'
-            close = ''
 
         if os.path.isfile(prompt):
             try:
                 cmd = [prompt]
-                cmd.append(close)
+                if close:
+                    cmd.append(close)
                 cmd.append('-Command')
                 cmd.append(command)
                 self.dbg("Running {}".format(cmd))
@@ -87,7 +81,7 @@ class PSCommand(kp.Plugin):
             except Exception as e:
                 print('Exception: CMD - (%s)' % (e))
         else:
-            print('Error: Could not find your %s executable.\n\nPlease edit path' % (prompt))
+            print('Error: Could not find \"%s\" executable.\n\nYou may need to modify the PATH' % (prompt))
 
     def on_activated(self):
         pass
@@ -108,10 +102,9 @@ class PSCommand(kp.Plugin):
     def _set_suggestion(self, target):
         [operator, command] = self._split_target(target)
 
-        if operator == '>':
-            close_msg = ''
-        elif operator == '>>':
-            close_msg = ' and close CMD.'
+        close_msg = ''
+        if operator == '>>':
+            close_msg = ' and close shell.'
 
         return self.create_item(
             category = self.ITEM_COMMAND,
