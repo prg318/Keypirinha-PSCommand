@@ -10,7 +10,7 @@ This plugin provides an easy way to execute powershell commands from Keypirinha.
 
 Since PSCommand is not in the PackageControl repository yet, perform a manual installation:
 
-Download the latest plugin file from [here](https://github.com/bantya/Keypirinha-PSCommand/releases/latest).
+Download the latest plugin file from [here](https://github.com/prg318/Keypirinha-PSCommand/releases/latest).
 
 Once the `Command.keypirinha-package` file is downloaded,
 move it to the `InstalledPackage` folder located at:
